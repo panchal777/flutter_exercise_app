@@ -75,11 +75,12 @@ class WorkoutListWidget extends StatelessWidget {
     WorkoutModel workoutModel,
     int index,
   ) {
+    final bloc = context.read<WorkoutBloc>();
     context.pushNamed(RouteName.workoutDetails, extra: workoutModel).then((
       value,
     ) {
       if (value != null && value is WorkoutModel) {
-        context.read<WorkoutBloc>().add(WorkoutCompleted(workoutModel, index));
+        bloc.add(WorkoutCompleted(workoutModel, index));
       }
     });
   }

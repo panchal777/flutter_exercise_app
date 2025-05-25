@@ -43,8 +43,6 @@ class WorkoutBloc extends Bloc<WorkoutEvent, WorkoutState> {
   String checkErrors(Failure failure) {
     if (failure is ServerFailure) {
       return failure.message;
-    } else if (failure is GeneralFailure) {
-      return failure.message;
     } else if (failure is FailureMessage) {
       return failure.message;
     } else {

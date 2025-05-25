@@ -1,5 +1,5 @@
 class AppStrings {
-  static String dashboardTitle = 'Dashboard';
+  static String dashboardTitle = 'Aletha Health';
 
   static var description = 'Description';
   static var difficulty = 'Difficulty';
@@ -7,5 +7,7 @@ class AppStrings {
 
   static var exercise = 'Exercises';
 
-  static var completed='Completed';
+  static var completed = 'Completed';
+  static var inProgress = "In Progress";
+  static var start = "Start";
 }

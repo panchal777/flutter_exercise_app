@@ -7,13 +7,6 @@ class ServerFailure extends Failure {
   ServerFailure(this.message, this.statusCode);
 }
 
-class GeneralFailure extends Failure {
-  String message = "";
-  int? statusCode;
-
-  GeneralFailure(this.message, this.statusCode);
-}
-
 class FailureMessage extends Failure {
   String message;
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_exercise_app/core/utils/image_constant.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../core/routes/route_name.dart';
@@ -21,7 +22,14 @@ class _SplashScreen extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FlutterLogo(size: MediaQuery.of(context).size.height),
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Image.asset(
+          ImageConstants.splashLogo2,
+          height: MediaQuery.of(context).size.height * 0.3,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 
