@@ -10,4 +10,6 @@ class AppStrings {
   static var completed = 'Completed';
   static var inProgress = "In Progress";
   static var start = "Start";
+
+  static var pause="Pause";
 }

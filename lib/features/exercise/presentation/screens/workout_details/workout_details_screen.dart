@@ -29,12 +29,12 @@ class WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     if (widget.workoutModel.isCompleted) {
       isCompleted = true;
     }
+    secondsLeft = widget.workoutModel.duration;
   }
 
   void startTimer() {
     setState(() {
       isStarted = true;
-      secondsLeft = widget.workoutModel.duration;
     });
 
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -44,6 +44,33 @@ class WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           isStarted = false;
           isCompleted = true;
           widget.workoutModel.isCompleted = true;
+        });
+        Future.delayed(Duration(seconds: 2), () {
+          if (mounted) {
+            Navigator.pop(context, widget.workoutModel);
+          }
+        });
+      } else {
+        setState(() {
+          secondsLeft--;
+        });
+      }
+    });
+  }
+
+  void pauseTimer() {
+    timer!.cancel();
+    debugPrint('secondsLeft --> $secondsLeft');
+  }
+
+  void resumeTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (secondsLeft == 0) {
+        timer.cancel();
+        setState(() {
+          isStarted = false;
+          isCompleted = false;
+          widget.workoutModel.isCompleted = false;
         });
         Future.delayed(Duration(seconds: 2), () {
           if (mounted) {
@@ -117,50 +144,16 @@ class WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                             BodyText(body: "${model.duration} seconds"),
                           ],
                         ),
-                        if (isStarted && !isCompleted)
-                          Text(
-                            "⏱ $secondsLeft s",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            isStarted || isCompleted ? null : startTimer();
-                          },
-                          icon: Icon(
-                            isCompleted
-                                ? Icons.done
-                                : isStarted
-                                ? Icons.timer
-                                : Icons.play_arrow,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            isCompleted
-                                ? AppStrings.completed
-                                : isStarted
-                                ? AppStrings.inProgress
-                                : AppStrings.start,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            backgroundColor: isCompleted
-                                ? Colors.green
-                                : isStarted
-                                ? Colors.grey
-                                : Colors.green,
+                        Text(
+                          "⏱ $secondsLeft s",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
                           ),
                         ),
+
+                        btn(),
                       ],
                     ),
                     SizedBox(height: 5),
@@ -171,6 +164,66 @@ class WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget btn() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (isStarted && timer != null)
+          ElevatedButton.icon(
+            onPressed: () {
+              resumeTimer();
+            },
+            icon: Icon(Icons.play_circle, color: Colors.white),
+            label: Text("Resume", style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              backgroundColor: Colors.deepPurple,
+            ),
+          ),
+
+        ElevatedButton.icon(
+          onPressed: () {
+            if (!isStarted && !isCompleted) {
+              startTimer();
+            } else {
+              pauseTimer();
+            }
+          },
+          icon: Icon(
+            isCompleted
+                ? Icons.done
+                : isStarted
+                ? Icons.pause
+                : Icons.play_arrow,
+            color: Colors.white,
+          ),
+          label: Text(
+            isCompleted
+                ? AppStrings.completed
+                : isStarted
+                ? AppStrings.pause
+                : AppStrings.start,
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            backgroundColor: isCompleted
+                ? Colors.green
+                : isStarted
+                ? Colors.deepOrange
+                : Colors.green,
+          ),
+        ),
+      ],
     );
   }
 }
